@@ -6,6 +6,7 @@ public:
 	Canvas(unsigned int, unsigned int);
 	void update();
 	sf::Sprite getSprite() { return sprite; }
+	void zoomIn(unsigned int x, unsigned int y);
 
 private:
 	unsigned int width;

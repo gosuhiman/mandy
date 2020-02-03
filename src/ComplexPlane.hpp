@@ -11,7 +11,7 @@ public:
   T width() { return maxX - minX; }
   T height() { return maxY - minY; }
 
-  inline void zoomTo(T x, T y, int zoomAmmount)
+  inline void zoomTo(T x, T y, long long zoomAmmount)
   {
     T halfWidth = width() / (zoomAmmount * 2);
     T halfHeight = height() / (zoomAmmount * 2);

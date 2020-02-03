@@ -4,7 +4,8 @@
 
 const unsigned int BYTES_IN_PIXEL = 4;
 
-const unsigned int MAX_ITERATIONS = 80;
+const unsigned int MAX_ITERATIONS = 200;
+const unsigned int ZOOM_AMMOUNT = 3;
 
 Canvas::Canvas(unsigned int width, unsigned int height) : width(width), height(height) {
 	pixels = new sf::Uint8[width * height * BYTES_IN_PIXEL];
@@ -24,6 +25,12 @@ Canvas::Canvas(unsigned int width, unsigned int height) : width(width), height(h
 
 void Canvas::update() {
   texture.update(pixels);
+}
+
+void Canvas::zoomIn(unsigned int x, unsigned int y) {
+  Complex zoomPoint = transformToComplexPlane(x, y);
+  viewport.zoomTo(zoomPoint.real(), zoomPoint.imag(), ZOOM_AMMOUNT);
+  generate();
 }
 
 Complex Canvas::transformToComplexPlane(int x, int y) {

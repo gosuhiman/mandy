@@ -12,7 +12,15 @@ void Application::run() {
   while (window->isOpen()) {
     sf::Event event;
     while (window->pollEvent(event)) {
-      if (event.type == sf::Event::Closed) window->close();
+      if (event.type == sf::Event::Closed) {
+        window->close();
+      }
+
+      if (event.type == sf::Event::MouseButtonPressed) {
+        if (event.mouseButton.button == sf::Mouse::Left) {
+          canvas->zoomIn(event.mouseButton.x, event.mouseButton.y);
+        }
+      }
     }
 
     window->clear(sf::Color::Black);
