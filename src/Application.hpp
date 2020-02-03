@@ -3,8 +3,8 @@
 #include "FpsCounter.hpp"
 
 struct ApplicationSettings {
-	size_t windowWidth;
-	size_t windowHeight;
+	unsigned int windowWidth;
+	unsigned int windowHeight;
 	const sf::String title;
 	unsigned int frameLimit;
 };

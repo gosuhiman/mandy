@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include "ComplexPlane.hpp"
 
 class Canvas {
 public:
@@ -13,5 +14,13 @@ private:
 	sf::Uint8* pixels;
 	sf::Texture texture;
 	sf::Sprite sprite;
-	int i;
+
+	ComplexPlane<double> defaultViewport;
+	ComplexPlane<double> viewport;
+
+	sf::Color* palette;
+
+	Complex transformToComplexPlane(int x, int y);
+	void generate();
+	void buildPalette();
 };
