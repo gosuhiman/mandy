@@ -23,5 +23,6 @@ private:
 
 	Complex transformToComplexPlane(int x, int y);
 	void generate();
+	void generatePixelRow(int py);
 	void buildPalette();
 };
