@@ -2,7 +2,7 @@
 
 class Canvas {
 public:
-	Canvas(unsigned int _width, unsigned int _height);
+	Canvas(unsigned int, unsigned int);
 	void update();
 	sf::Sprite getSprite() { return sprite; }
 

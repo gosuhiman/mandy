@@ -1,10 +1,11 @@
 #include "Canvas.hpp"
 
-Canvas::Canvas(unsigned int _width, unsigned int _height) {
-  width = _width;
-  height = _height;
+#pragma warning(disable : 26451)
 
-	pixels = new sf::Uint8[800 * 600 * 4];
+const unsigned int BYTES_IN_PIXEL = 4;
+
+Canvas::Canvas(unsigned int width, unsigned int height) : width(width), height(height) {
+	pixels = new sf::Uint8[width * height * BYTES_IN_PIXEL];
 
   if (!texture.create(width, height))
     throw std::exception("failed creating texture");
