@@ -20,12 +20,17 @@ void Application::run() {
       }
 
       if (event.type == sf::Event::Resized) {
-        canvas->resize(event.size.width, event.size.height);
+        sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
+        window->setView(sf::View(visibleArea));
+
+        for (auto widget : widgets) {
+          widget->onResize(event.size.width, event.size.height);
+        }
       }
 
       if (event.type == sf::Event::MouseButtonPressed) {
         if (event.mouseButton.button == sf::Mouse::Left) {
-          canvas->zoomIn(event.mouseButton.x, event.mouseButton.y);
+          canvas->onClick(event.mouseButton.x, event.mouseButton.y);
         }
       }
     }
