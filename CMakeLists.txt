@@ -2,7 +2,7 @@
 
 project ("mandy")
 
-file(GLOB SRC_DIR CONFIGURE_DEPENDS "src/*.hpp" "src/*.cpp")
+file(GLOB SRC_DIR CONFIGURE_DEPENDS "src/*.hpp" "src/*.cpp" "src/**/*.hpp" "src/**/*.cpp")
 
 add_executable (mandy ${SRC_DIR})
 

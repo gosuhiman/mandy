@@ -1,10 +1,14 @@
 #include <SFML/Graphics.hpp>
+#include "../Widget.hpp"
 
-class FpsCounter {
+class FpsCounter : public Widget {
 public:
 	FpsCounter();
+
+//Widget methods
+public:
 	void update();
-	sf::Text getText() { return text; }
+	void draw(sf::RenderWindow* target);
 
 private:
 	sf::Clock clock;

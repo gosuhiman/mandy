@@ -15,12 +15,14 @@ std::mutex mtx;
 
 Canvas::Canvas(unsigned int width, unsigned int height) : width(width), height(height) {
 	pixels = new sf::Uint8[width * height * BYTES_IN_PIXEL];
+  texture = new sf::Texture();
+  sprite = new sf::Sprite();
 
-  if (!texture.create(width, height))
+  if (!texture->create(width, height))
     throw std::exception("failed creating texture");
 
-  texture.update(pixels);
-  sprite.setTexture(texture);
+  texture->update(pixels);
+  sprite->setTexture(*texture);
 
   defaultViewport = ComplexPlane<double>(-2.4, -1.2, 0.9, 1.2);
   viewport = defaultViewport;
@@ -30,12 +32,25 @@ Canvas::Canvas(unsigned int width, unsigned int height) : width(width), height(h
 }
 
 void Canvas::update() {
-  texture.update(pixels);
+}
+
+void Canvas::draw(sf::RenderWindow* target) {
+  target->draw(*sprite);
 }
 
 void Canvas::zoomIn(unsigned int x, unsigned int y) {
   Complex zoomPoint = transformToComplexPlane(x, y);
   viewport.zoomTo(zoomPoint.real(), zoomPoint.imag(), ZOOM_AMMOUNT);
+  generate();
+}
+
+void Canvas::resize(unsigned int newWidth, unsigned int newHeight) {
+  width = newWidth;
+  height = newHeight;
+
+  // delete[] pixels;
+  sf::Uint8* newPixels = new sf::Uint8[width * height * BYTES_IN_PIXEL];
+  sf::Texture* texture = new sf::Texture();
   generate();
 }
 
@@ -67,6 +82,8 @@ void Canvas::generate() {
   std::for_each(threads.begin(), threads.end(), [](std::thread& t) {
     t.join();
   });
+
+  texture->update(pixels);
 }
 
 void Canvas::generatePixelRow(int py) {

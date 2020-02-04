@@ -6,6 +6,9 @@ Application::Application(ApplicationSettings settings) : settings(settings) {
 
   canvas = new Canvas(settings.windowWidth, settings.windowHeight);
   fpsCounter = new FpsCounter();
+
+  widgets.push_back(canvas);
+  widgets.push_back(fpsCounter);
 };
 
 void Application::run() {
@@ -14,6 +17,10 @@ void Application::run() {
     while (window->pollEvent(event)) {
       if (event.type == sf::Event::Closed) {
         window->close();
+      }
+
+      if (event.type == sf::Event::Resized) {
+        canvas->resize(event.size.width, event.size.height);
       }
 
       if (event.type == sf::Event::MouseButtonPressed) {
@@ -25,11 +32,11 @@ void Application::run() {
 
     window->clear(sf::Color::Black);
 
-    canvas->update();
-    fpsCounter->update();
+    for (auto widget : widgets) {
+      widget->update();
+      widget->draw(window);
+    }
 
-    window->draw(canvas->getSprite());
-    window->draw(fpsCounter->getText());
     window->display();
   }
 };

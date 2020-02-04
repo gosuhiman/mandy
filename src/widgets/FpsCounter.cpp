@@ -18,3 +18,7 @@ void FpsCounter::update() {
   text.setString(fpsString);
   clock.restart();
 };
+
+void FpsCounter::draw(sf::RenderWindow* target) {
+  target->draw(text);
+}
