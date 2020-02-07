@@ -1,4 +1,4 @@
-#include <math.h>
+#include "../utils.hpp"
 #include "FpsCounter.hpp"
 
 FpsCounter::FpsCounter() {
@@ -10,13 +10,20 @@ FpsCounter::FpsCounter() {
   text.setCharacterSize(24);
   text.setFillColor(sf::Color::White);
   text.setStyle(sf::Text::Regular);
+
+  averageSecondsPerFrame = 0;
 };
 
 void FpsCounter::update() {
-  sf::Time time = clock.getElapsedTime();
-  std::string fpsString = std::to_string(round(1.0f / time.asSeconds()));
-  text.setString(fpsString);
+  float deltaTime = clock.getElapsedTime().asSeconds();
+  averageSecondsPerFrame += (deltaTime - averageSecondsPerFrame) * 0.03f;
   clock.restart();
+
+  if (viewUpdateClock.getElapsedTime() > sf::seconds(0.1f)) {
+    float fps = 1.0f / averageSecondsPerFrame;
+    text.setString(floatToString(fps));
+    viewUpdateClock.restart();
+  }
 };
 
 void FpsCounter::draw(sf::RenderWindow* target) {

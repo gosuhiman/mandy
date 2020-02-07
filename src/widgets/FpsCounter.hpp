@@ -12,6 +12,9 @@ public:
 
 private:
 	sf::Clock clock;
+	sf::Clock viewUpdateClock;
 	sf::Text text;
 	sf::Font font;
+
+	float averageSecondsPerFrame;
 };
