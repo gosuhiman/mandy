@@ -33,10 +33,11 @@ void Canvas::onResize(unsigned int newWidth, unsigned int newHeight) {
 
   fractal->resize(width, height);
 
+  delete texture;
   texture = new sf::Texture();
   if (!texture->create(width, height))
     throw std::exception("failed creating texture");
 
   texture->update(fractal->pixels);
-  sprite->setTexture(*texture);
+  sprite->setTexture(*texture, true);
 }

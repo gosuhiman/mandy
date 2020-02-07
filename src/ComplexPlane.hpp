@@ -20,4 +20,12 @@ public:
     minY = y - halfWidth;
     maxY = y + halfHeight;
   }
+
+  inline void updateForProportions(T proportions)
+  {
+    T newHalfHeight = width() * proportions / 2;
+    T centerY = (minY + maxY) / 2;
+    minY = centerY - newHalfHeight;
+    maxY = centerY + newHalfHeight;
+  }
 };

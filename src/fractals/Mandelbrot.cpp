@@ -16,8 +16,9 @@ std::mutex mtx;
 Mandelbrot::Mandelbrot(unsigned int width, unsigned int height) : width(width), height(height) {
   pixels = new sf::Uint8[width * height * BYTES_IN_PIXEL];
 
-  defaultViewport = ComplexPlane<double>(-2.4, -1.2, 0.9, 1.2);
+  defaultViewport = ComplexPlane<double>(-2.2, -1.2, 1, 1.2);
   viewport = defaultViewport;
+  viewport.updateForProportions(double(height) / double(width));
 
   buildPalette();
   generate(pixels);
@@ -32,10 +33,10 @@ void Mandelbrot::zoomIn(unsigned int x, unsigned int y) {
 void Mandelbrot::resize(unsigned int newWidth, unsigned int newHeight) {
   width = newWidth;
   height = newHeight;
-  sf::Uint8* newPixels = new sf::Uint8[width * height * BYTES_IN_PIXEL];
-  generate(newPixels);
-  //delete[] pixels;
-  pixels = newPixels;
+  viewport.updateForProportions(double(height) / double(width));
+  delete[] pixels;
+  pixels = new sf::Uint8[width * height * BYTES_IN_PIXEL];
+  generate(pixels);
 }
 
 Complex Mandelbrot::transformToComplexPlane(int x, int y) {
