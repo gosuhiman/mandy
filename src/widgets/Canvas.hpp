@@ -10,15 +10,15 @@ public:
 //Widget methods
 public:
 	void update();
-	void draw(sf::RenderWindow* target);
+	void draw(std::shared_ptr<sf::RenderWindow> target);
 	void onResize(unsigned int newWidth, unsigned int newHeight);
 
 private:
 	unsigned int width;
 	unsigned int height;
 
-	Mandelbrot* fractal;
+	std::unique_ptr<Mandelbrot> fractal;
 
-	sf::Texture* texture;
-	sf::Sprite* sprite;
+	std::unique_ptr<sf::Texture> texture;
+	std::unique_ptr<sf::Sprite> sprite;
 };

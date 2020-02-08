@@ -5,12 +5,6 @@
 
 #pragma warning(disable : 26451)
 
-const unsigned int BYTES_IN_PIXEL = 4;
-
-const unsigned int MAX_ITERATIONS = 200;
-const unsigned int ZOOM_AMMOUNT = 3;
-const unsigned int THREAD_COUNT = 8;
-
 std::mutex mtx;
 
 Mandelbrot::Mandelbrot(unsigned int width, unsigned int height) : width(width), height(height) {
@@ -61,7 +55,7 @@ void Mandelbrot::generate(sf::Uint8* pixels) {
         mtx.unlock();
         generatePixelRow(py, pixels);
       }
-      });
+    });
     threads.push_back(std::move(thread));
   }
 
@@ -81,7 +75,7 @@ void Mandelbrot::generatePixelRow(int py, sf::Uint8* pixels) {
       i++;
     }
 
-    sf::Color color = palette[i];
+    sf::Color color = palette[i - 1];
     pixels[(px + py * width) * 4] = color.r;
     pixels[(px + py * width) * 4 + 1] = color.g;
     pixels[(px + py * width) * 4 + 2] = color.b;
@@ -90,7 +84,6 @@ void Mandelbrot::generatePixelRow(int py, sf::Uint8* pixels) {
 }
 
 void Mandelbrot::buildPalette() {
-  palette = new sf::Color[width * height];
   float r, g, b;
 
   for (int i = 0; i < MAX_ITERATIONS; i++)

@@ -8,7 +8,7 @@ public:
 //Widget methods
 public:
 	void update();
-	void draw(sf::RenderWindow* target);
+	void draw(std::shared_ptr<sf::RenderWindow> target);
 
 private:
 	sf::Clock clock;

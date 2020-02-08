@@ -1,11 +1,11 @@
 #include "Application.hpp"
 
 Application::Application(ApplicationSettings settings) : settings(settings) {
-  window = new sf::RenderWindow(sf::VideoMode(settings.windowWidth, settings.windowHeight), settings.title);
+  window = std::make_shared<sf::RenderWindow>(sf::VideoMode(settings.windowWidth, settings.windowHeight), settings.title);
   window->setFramerateLimit(settings.frameLimit);
 
-  canvas = new Canvas(settings.windowWidth, settings.windowHeight);
-  fpsCounter = new FpsCounter();
+  canvas = std::make_shared<Canvas>(settings.windowWidth, settings.windowHeight);
+  fpsCounter = std::make_shared<FpsCounter>();
 
   widgets.push_back(canvas);
   widgets.push_back(fpsCounter);
@@ -20,7 +20,7 @@ void Application::run() {
       }
 
       if (event.type == sf::Event::Resized) {
-        sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
+        sf::FloatRect visibleArea(0, 0, (float)event.size.width, (float)event.size.height);
         window->setView(sf::View(visibleArea));
 
         for (auto widget : widgets) {

@@ -17,9 +17,9 @@ public:
 
 private:
 	ApplicationSettings settings;
-	sf::RenderWindow* window;
+	std::shared_ptr<sf::RenderWindow> window;
 
-	std::vector<Widget*> widgets;
-	Canvas* canvas;
-	FpsCounter* fpsCounter;
+	std::vector<std::shared_ptr<Widget>> widgets;
+	std::shared_ptr<Canvas> canvas;
+	std::shared_ptr<FpsCounter> fpsCounter;
 };

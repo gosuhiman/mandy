@@ -26,6 +26,6 @@ void FpsCounter::update() {
   }
 };
 
-void FpsCounter::draw(sf::RenderWindow* target) {
+void FpsCounter::draw(std::shared_ptr<sf::RenderWindow> target) {
   target->draw(text);
 }
