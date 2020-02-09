@@ -1,3 +1,4 @@
+#include <future>
 #include <SFML/Graphics.hpp>
 #include "../Widget.hpp"
 #include "../fractals/Mandelbrot.hpp"
@@ -9,6 +10,7 @@ public:
 
 //Widget methods
 public:
+	void initialize();
 	void update();
 	void draw(std::shared_ptr<sf::RenderWindow> target);
 	void onResize(unsigned int newWidth, unsigned int newHeight);
@@ -21,4 +23,7 @@ private:
 
 	std::unique_ptr<sf::Texture> texture;
 	std::unique_ptr<sf::Sprite> sprite;
+
+	std::future<void> drawFuture;
+	sf::Uint8* currentPixels;
 };

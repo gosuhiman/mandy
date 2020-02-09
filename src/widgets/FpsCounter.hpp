@@ -7,6 +7,7 @@ public:
 
 //Widget methods
 public:
+	void initialize() {};
 	void update();
 	void draw(std::shared_ptr<sf::RenderWindow> target);
 

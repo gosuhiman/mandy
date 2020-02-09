@@ -1,4 +1,5 @@
 #include <array>
+#include <functional>
 #include <SFML/Graphics.hpp>
 #include "../ComplexPlane.hpp"
 
@@ -11,10 +12,10 @@ const unsigned int THREAD_COUNT = 8;
 class Mandelbrot {
 public:
 	Mandelbrot(unsigned int width, unsigned int height);
+	void initialize();
 	void zoomIn(unsigned int x, unsigned int y);
 	void resize(unsigned int newWidth, unsigned int newHeight);
-
-	sf::Uint8* pixels;
+	void draw(std::function<void(sf::Uint8*)> callback);
 
 private:
 	unsigned int width;

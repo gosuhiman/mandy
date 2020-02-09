@@ -4,6 +4,7 @@
 
 class Widget {
 public:
+	virtual void initialize() {};
 	virtual void update() {};
 	virtual void draw(std::shared_ptr<sf::RenderWindow> target) {};
 

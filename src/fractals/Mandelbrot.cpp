@@ -8,29 +8,30 @@
 std::mutex mtx;
 
 Mandelbrot::Mandelbrot(unsigned int width, unsigned int height) : width(width), height(height) {
-  pixels = new sf::Uint8[width * height * BYTES_IN_PIXEL];
-
   defaultViewport = ComplexPlane<double>(-2.2, -1.2, 1, 1.2);
   viewport = defaultViewport;
   viewport.updateForProportions(double(height) / double(width));
+}
 
+void Mandelbrot::initialize() {
   buildPalette();
+}
+
+void Mandelbrot::draw(std::function<void(sf::Uint8*)> callback) {
+  sf::Uint8* pixels = new sf::Uint8[width * height * BYTES_IN_PIXEL];
   generate(pixels);
+  callback(pixels);
 }
 
 void Mandelbrot::zoomIn(unsigned int x, unsigned int y) {
   Complex zoomPoint = transformToComplexPlane(x, y);
   viewport.zoomTo(zoomPoint.real(), zoomPoint.imag(), ZOOM_AMMOUNT);
-  generate(pixels);
 }
 
 void Mandelbrot::resize(unsigned int newWidth, unsigned int newHeight) {
   width = newWidth;
   height = newHeight;
   viewport.updateForProportions(double(height) / double(width));
-  delete[] pixels;
-  pixels = new sf::Uint8[width * height * BYTES_IN_PIXEL];
-  generate(pixels);
 }
 
 Complex Mandelbrot::transformToComplexPlane(int x, int y) {
@@ -41,8 +42,8 @@ Complex Mandelbrot::transformToComplexPlane(int x, int y) {
 }
 
 void Mandelbrot::generate(sf::Uint8* pixels) {
-  std::vector<std::thread> threads;
   std::queue<int> tasks;
+  std::vector<std::thread> threads;
 
   for (unsigned int py = 0; py < height; py++) tasks.push(py);
 
@@ -59,9 +60,7 @@ void Mandelbrot::generate(sf::Uint8* pixels) {
     threads.push_back(std::move(thread));
   }
 
-  std::for_each(threads.begin(), threads.end(), [](std::thread& t) {
-    t.join();
-  });
+  for (std::thread& t : threads) t.join();
 }
 
 void Mandelbrot::generatePixelRow(int py, sf::Uint8* pixels) {

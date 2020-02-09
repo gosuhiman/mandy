@@ -12,6 +12,8 @@ Application::Application(ApplicationSettings settings) : settings(settings) {
 };
 
 void Application::run() {
+  for (auto widget : widgets) widget->initialize();
+
   while (window->isOpen()) {
     sf::Event event;
     while (window->pollEvent(event)) {
