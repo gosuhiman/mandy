@@ -35,6 +35,12 @@ void Application::run() {
           canvas->onClick(event.mouseButton.x, event.mouseButton.y);
         }
       }
+
+      if (event.type == sf::Event::KeyReleased) {
+        if (event.key.code == sf::Keyboard::Space) {
+          canvas->saveScreenshot();
+        }
+      }
     }
 
     window->clear(sf::Color::Black);

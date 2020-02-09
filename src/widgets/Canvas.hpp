@@ -14,6 +14,7 @@ public:
 	void update() {};
 	void draw(std::shared_ptr<sf::RenderWindow> target);
 	void onResize(unsigned int newWidth, unsigned int newHeight);
+	void saveScreenshot();
 
 private:
 	unsigned int width;

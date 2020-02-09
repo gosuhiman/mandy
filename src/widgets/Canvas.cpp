@@ -1,4 +1,5 @@
 #include "Canvas.hpp"
+#include "../ScreenshotSaver.hpp"
 
 #pragma warning(disable : 26451)
 
@@ -43,6 +44,10 @@ void Canvas::onResize(unsigned int newWidth, unsigned int newHeight) {
 
   sprite->setTexture(*texture, true);
   drawFractal();
+}
+
+void Canvas::saveScreenshot() {
+  ScreenshotSaver::save(*texture);
 }
 
 void Canvas::drawFractal() {
