@@ -7,7 +7,7 @@ const unsigned int BYTES_IN_PIXEL = 4;
 
 const unsigned int MAX_ITERATIONS = 200;
 const unsigned int ZOOM_AMMOUNT = 3;
-const unsigned int THREAD_COUNT = 8;
+const unsigned int DEFAULT_THREAD_COUNT = 1;
 
 class Mandelbrot {
 public:
@@ -20,6 +20,7 @@ public:
 private:
 	unsigned int width;
 	unsigned int height;
+	unsigned int threadCount;
 
 	ComplexPlane<double> defaultViewport;
 	ComplexPlane<double> viewport;
@@ -27,7 +28,7 @@ private:
 	std::array<sf::Color, MAX_ITERATIONS> palette;
 
 	Complex transformToComplexPlane(int x, int y);
-	void generate(sf::Uint8* pixels);
+	sf::Uint8* generate();
 	void generatePixelRow(int py, sf::Uint8* pixels);
 	void buildPalette();
 };

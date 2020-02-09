@@ -1,5 +1,6 @@
 #include <iomanip>
 #include <sstream>
+#include <future>
 
 std::string floatToString(float number) {
   std::stringstream stream;

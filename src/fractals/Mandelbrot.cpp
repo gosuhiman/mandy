@@ -11,6 +11,8 @@ Mandelbrot::Mandelbrot(unsigned int width, unsigned int height) : width(width), 
   defaultViewport = ComplexPlane<double>(-2.2, -1.2, 1, 1.2);
   viewport = defaultViewport;
   viewport.updateForProportions(double(height) / double(width));
+  threadCount = std::thread::hardware_concurrency();
+  if (threadCount == 0) threadCount = DEFAULT_THREAD_COUNT;
 }
 
 void Mandelbrot::initialize() {
@@ -18,9 +20,7 @@ void Mandelbrot::initialize() {
 }
 
 void Mandelbrot::draw(std::function<void(sf::Uint8*)> callback) {
-  sf::Uint8* pixels = new sf::Uint8[width * height * BYTES_IN_PIXEL];
-  generate(pixels);
-  callback(pixels);
+  callback(generate());
 }
 
 void Mandelbrot::zoomIn(unsigned int x, unsigned int y) {
@@ -41,13 +41,14 @@ Complex Mandelbrot::transformToComplexPlane(int x, int y) {
   return c;
 }
 
-void Mandelbrot::generate(sf::Uint8* pixels) {
+sf::Uint8* Mandelbrot::generate() {
+  sf::Uint8* pixels = new sf::Uint8[width * height * BYTES_IN_PIXEL];
   std::queue<int> tasks;
   std::vector<std::thread> threads;
 
   for (unsigned int py = 0; py < height; py++) tasks.push(py);
 
-  for (int t = 0; t < THREAD_COUNT; t++) {
+  for (int t = 0; t < threadCount; t++) {
     std::thread thread([&]() {
       while (tasks.size() > 0) {
         mtx.lock();
@@ -61,6 +62,7 @@ void Mandelbrot::generate(sf::Uint8* pixels) {
   }
 
   for (std::thread& t : threads) t.join();
+  return pixels;
 }
 
 void Mandelbrot::generatePixelRow(int py, sf::Uint8* pixels) {

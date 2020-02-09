@@ -1,26 +1,23 @@
 #include "Canvas.hpp"
 
 #pragma warning(disable : 26451)
-#pragma warning(disable : 26444)
 
 Canvas::Canvas(unsigned int width, unsigned int height) : width(width), height(height) {
+  inputBlocked = true;
+
   texture = std::make_unique<sf::Texture>();
   sprite = std::make_unique<sf::Sprite>();
   fractal = std::make_unique<Mandelbrot>(width, height);
 
   if (!texture->create(width, height)) throw std::exception("failed creating texture");
   sprite->setTexture(*texture);
+
+  updateTextureCallback = std::bind(&Canvas::updateTexture, this, std::placeholders::_1);
 }
 
 void Canvas::initialize() {
   fractal->initialize();
-  drawFuture = std::async(std::launch::async, &Mandelbrot::draw, *fractal, [&](sf::Uint8* pixels) {
-    currentPixels = pixels;
-    texture->update(currentPixels);
-  });
-}
-
-void Canvas::update() {
+  drawFractal();
 }
 
 void Canvas::draw(std::shared_ptr<sf::RenderWindow> target) {
@@ -28,12 +25,10 @@ void Canvas::draw(std::shared_ptr<sf::RenderWindow> target) {
 }
 
 void Canvas::onClick(unsigned int x, unsigned int y) {
+  if (inputBlocked) return;
+  inputBlocked = true;
   fractal->zoomIn(x, y);
-  drawFuture = std::async(std::launch::async, &Mandelbrot::draw, *fractal, [&](sf::Uint8* pixels) {
-    delete[] currentPixels;
-    currentPixels = pixels;
-    texture->update(currentPixels);
-  });
+  drawFractal();
 }
 
 void Canvas::onResize(unsigned int newWidth, unsigned int newHeight) {
@@ -46,10 +41,17 @@ void Canvas::onResize(unsigned int newWidth, unsigned int newHeight) {
   if (!texture->create(width, height))
     throw std::exception("failed creating texture");
 
-  drawFuture = std::async(std::launch::async, &Mandelbrot::draw, *fractal, [&](sf::Uint8* pixels) {
-    delete[] currentPixels;
-    currentPixels = pixels;
-    texture->update(currentPixels);
-    sprite->setTexture(*texture, true);
-  });
+  sprite->setTexture(*texture, true);
+  drawFractal();
+}
+
+void Canvas::drawFractal() {
+  drawFuture = std::async(std::launch::async, &Mandelbrot::draw, *fractal, updateTextureCallback);
+}
+
+void Canvas::updateTexture(sf::Uint8* pixels) {
+  if (currentPixels != nullptr) delete[] currentPixels;
+  currentPixels = pixels;
+  texture->update(currentPixels);
+  inputBlocked = false;
 }
