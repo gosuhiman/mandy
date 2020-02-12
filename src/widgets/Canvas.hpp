@@ -3,6 +3,8 @@
 #include "../Widget.hpp"
 #include "../fractals/Mandelbrot.hpp"
 
+const sf::Color backgroundColor = sf::Color(43, 45, 66, 255);
+
 class Canvas : public Widget {
 public:
 	Canvas(unsigned int width, unsigned int height);
@@ -15,6 +17,7 @@ public:
 	void draw(std::shared_ptr<sf::RenderWindow> target);
 	void onResize(unsigned int newWidth, unsigned int newHeight);
 	void saveScreenshot();
+	void changeColoringMode();
 
 private:
 	unsigned int width;
@@ -27,6 +30,7 @@ private:
 	std::unique_ptr<sf::Sprite> sprite;
 
 	void drawFractal();
+	void createNewTexture();
 	void updateTexture(sf::Uint8* pixels);
 
 	std::future<void> drawFuture;

@@ -41,6 +41,12 @@ void Application::run() {
           canvas->saveScreenshot();
         }
       }
+
+      if (event.type == sf::Event::KeyReleased) {
+        if (event.key.code == sf::Keyboard::C) {
+          canvas->changeColoringMode();
+        }
+      }
     }
 
     window->clear(sf::Color::Black);
