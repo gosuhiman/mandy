@@ -6,7 +6,7 @@
 
 const unsigned int BYTES_IN_PIXEL = 4;
 
-const unsigned int MAX_ITERATIONS = 100;
+const unsigned int MAX_ITERATIONS = 200;
 const unsigned int ZOOM_AMMOUNT = 3;
 const unsigned int DEFAULT_THREAD_COUNT = 1;
 

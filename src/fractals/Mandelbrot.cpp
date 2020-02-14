@@ -91,9 +91,23 @@ sf::Uint8* Mandelbrot::generate() {
 void Mandelbrot::generatePixelRow(int py, sf::Uint8* pixels) {
   for (unsigned int px = 0; px < width; px++) {
     Complex c = transformToComplexPlane(px, py);
-    Complex z = Complex(0);
     sf::Uint8 i = 0;
-    while (std::abs(z) < 2 && i < MAX_ITERATIONS) { z = z * z + c; i++; }
+
+    double cr = c.real();
+    double ci = c.imag();
+    double zr = 0;
+    double zi = 0;
+    double zrsqr = zr * zr;
+    double zisqr = zi * zi;
+    while (zrsqr + zisqr < 4 && i < MAX_ITERATIONS) {
+      zi = zr * zi;
+      zi += zi;
+      zi += ci;
+      zr = zrsqr - zisqr + cr;
+      zrsqr = zr * zr;
+      zisqr = zi * zi;
+      i++;
+    }
     data[px + py * width] = i;
     colorPixel(px, py, pixels);
   }
