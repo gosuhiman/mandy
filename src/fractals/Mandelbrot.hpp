@@ -2,10 +2,11 @@
 #include <functional>
 #include <SFML/Graphics.hpp>
 #include "../ComplexPlane.hpp"
+#include "../services/StatsService.hpp"
 
 const unsigned int BYTES_IN_PIXEL = 4;
 
-const unsigned int MAX_ITERATIONS = 200;
+const unsigned int MAX_ITERATIONS = 100;
 const unsigned int ZOOM_AMMOUNT = 3;
 const unsigned int DEFAULT_THREAD_COUNT = 1;
 
@@ -26,11 +27,14 @@ public:
 	void resize(unsigned int newWidth, unsigned int newHeight);
 	void draw(std::function<void(sf::Uint8*)> callback);
 	void changeColoringMode(std::function<void(sf::Uint8*)> callback);
+	void setLastGenerationDurationCallback(std::function<void(Duration)> callback);
 
 private:
 	unsigned int width;
 	unsigned int height;
 	unsigned int threadCount;
+
+	std::function<void(Duration)> lastGenerationDurationCallback;
 
 	ComplexPlane<double> defaultViewport;
 	ComplexPlane<double> viewport;

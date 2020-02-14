@@ -1,5 +1,6 @@
 #include <future>
 #include <SFML/Graphics.hpp>
+#include "../services/StatsService.hpp"
 #include "../Widget.hpp"
 #include "../fractals/Mandelbrot.hpp"
 
@@ -7,7 +8,7 @@ const sf::Color backgroundColor = sf::Color(43, 45, 66, 255);
 
 class Canvas : public Widget {
 public:
-	Canvas(unsigned int width, unsigned int height);
+	Canvas(unsigned int width, unsigned int height, std::shared_ptr<StatService> statService);
 	void onClick(unsigned int x, unsigned int y);
 
 //Widget methods
@@ -20,6 +21,8 @@ public:
 	void changeColoringMode();
 
 private:
+	std::shared_ptr<StatService> statService;
+
 	unsigned int width;
 	unsigned int height;
 	bool inputBlocked;

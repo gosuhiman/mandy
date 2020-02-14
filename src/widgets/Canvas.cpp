@@ -3,7 +3,7 @@
 
 #pragma warning(disable : 26451)
 
-Canvas::Canvas(unsigned int width, unsigned int height) : width(width), height(height) {
+Canvas::Canvas(unsigned int width, unsigned int height, std::shared_ptr<StatService> statService) : width(width), height(height), statService(statService) {
   inputBlocked = true;
 
   sprite = std::make_unique<sf::Sprite>();
@@ -13,6 +13,10 @@ Canvas::Canvas(unsigned int width, unsigned int height) : width(width), height(h
   sprite->setTexture(*texture);
 
   updateTextureCallback = std::bind(&Canvas::updateTexture, this, std::placeholders::_1);
+
+  fractal->setLastGenerationDurationCallback([statService](Duration duration) {
+    statService->data.lastGeneretionDuration = duration;
+  });
 }
 
 void Canvas::initialize() {

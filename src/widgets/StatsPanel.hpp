@@ -1,9 +1,10 @@
 #include <SFML/Graphics.hpp>
+#include "../services/StatsService.hpp"
 #include "../Widget.hpp"
 
-class FpsCounter : public Widget {
+class StatsPanel : public Widget {
 public:
-	FpsCounter();
+	StatsPanel(std::shared_ptr<StatService> statService);
 
 //Widget methods
 public:
@@ -12,10 +13,15 @@ public:
 	void draw(std::shared_ptr<sf::RenderWindow> target);
 
 private:
+	std::shared_ptr<StatService> statService;
+
 	sf::Clock clock;
 	sf::Clock viewUpdateClock;
-	sf::Text text;
+	sf::Text fpsText;
+	sf::Text lastGeneretionDurationText;
 	sf::Font font;
 
 	float averageSecondsPerFrame;
+
+	void setDefaultTextStyle(sf::Text& text);
 };

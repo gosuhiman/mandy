@@ -1,7 +1,8 @@
 #include <SFML/Graphics.hpp>
 #include "Widget.hpp"
 #include "widgets/Canvas.hpp"
-#include "widgets/FpsCounter.hpp"
+#include "widgets/StatsPanel.hpp"
+#include "services/StatsService.hpp"
 
 struct ApplicationSettings {
 	unsigned int windowWidth;
@@ -17,9 +18,11 @@ public:
 
 private:
 	ApplicationSettings settings;
+	std::shared_ptr<StatService> statService;
+
 	std::shared_ptr<sf::RenderWindow> window;
 
 	std::vector<std::shared_ptr<Widget>> widgets;
 	std::shared_ptr<Canvas> canvas;
-	std::shared_ptr<FpsCounter> fpsCounter;
+	std::shared_ptr<StatsPanel> statsPanel;
 };

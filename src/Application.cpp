@@ -1,14 +1,16 @@
 #include "Application.hpp"
 
 Application::Application(ApplicationSettings settings) : settings(settings) {
+  statService = std::make_shared<StatService>();
+
   window = std::make_shared<sf::RenderWindow>(sf::VideoMode(settings.windowWidth, settings.windowHeight), settings.title);
   window->setFramerateLimit(settings.frameLimit);
 
-  canvas = std::make_shared<Canvas>(settings.windowWidth, settings.windowHeight);
-  fpsCounter = std::make_shared<FpsCounter>();
+  canvas = std::make_shared<Canvas>(settings.windowWidth, settings.windowHeight, statService);
+  statsPanel = std::make_shared<StatsPanel>(statService);
 
   widgets.push_back(canvas);
-  widgets.push_back(fpsCounter);
+  widgets.push_back(statsPanel);
 };
 
 void Application::run() {

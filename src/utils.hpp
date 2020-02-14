@@ -1,9 +1,8 @@
 #include <iomanip>
 #include <sstream>
-#include <future>
 
-std::string floatToString(float number) {
+template <class T> std::string numberToString(T number, int precision = 0) {
   std::stringstream stream;
-  stream << std::fixed << std::setprecision(0) << number;
+  stream << std::fixed << std::setprecision(precision) << number;
   return stream.str();
 }

@@ -1,4 +1,5 @@
 #include "Mandelbrot.hpp"
+#include <chrono>
 #include <queue>
 #include <thread>
 #include <mutex>
@@ -25,6 +26,10 @@ void Mandelbrot::initialize() {
 
 void Mandelbrot::draw(std::function<void(sf::Uint8*)> callback) {
   callback(generate());
+}
+
+void Mandelbrot::setLastGenerationDurationCallback(std::function<void(Duration)> callback) {
+  lastGenerationDurationCallback = callback;
 }
 
 void Mandelbrot::changeColoringMode(std::function<void(sf::Uint8*)> callback) {
@@ -60,6 +65,8 @@ sf::Uint8* Mandelbrot::generate() {
 
   for (unsigned int py = 0; py < height; py++) tasks.push(py);
 
+  auto timePointBefore = std::chrono::high_resolution_clock::now();
+
   for (int t = 0; t < threadCount; t++) {
     std::thread thread([&]() {
       while (tasks.size() > 0) {
@@ -74,6 +81,10 @@ sf::Uint8* Mandelbrot::generate() {
   }
 
   for (std::thread& t : threads) t.join();
+
+  auto timePointAfter = std::chrono::high_resolution_clock::now();
+  lastGenerationDurationCallback(timePointAfter - timePointBefore);
+
   return pixels;
 }
 
