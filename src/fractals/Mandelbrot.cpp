@@ -99,15 +99,18 @@ void Mandelbrot::generatePixelRow(int py, sf::Uint8* pixels) {
     double zi = 0;
     double zrsqr = zr * zr;
     double zisqr = zi * zi;
+    double zrPlusZi;
+
     while (zrsqr + zisqr < 4 && i < MAX_ITERATIONS) {
-      zi = zr * zi;
-      zi += zi;
+      zrPlusZi = zr + zi;
+      zi = zrPlusZi * zrPlusZi - zrsqr - zisqr;
       zi += ci;
       zr = zrsqr - zisqr + cr;
       zrsqr = zr * zr;
       zisqr = zi * zi;
       i++;
     }
+
     data[px + py * width] = i;
     colorPixel(px, py, pixels);
   }
