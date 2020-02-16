@@ -19,6 +19,7 @@ private:
 	sf::Clock viewUpdateClock;
 	sf::Text fpsText;
 	sf::Text lastGeneretionDurationText;
+	sf::Text maxIterationsText;
 	sf::Font font;
 
 	float averageSecondsPerFrame;

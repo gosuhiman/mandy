@@ -7,8 +7,11 @@ StatsPanel::StatsPanel(std::shared_ptr<StatService> statService) : statService(s
 
   setDefaultTextStyle(fpsText);
   setDefaultTextStyle(lastGeneretionDurationText);
+  setDefaultTextStyle(maxIterationsText);
 
-  lastGeneretionDurationText.setPosition(0.f, 30.f);
+  fpsText.setPosition(2.f, 2);
+  lastGeneretionDurationText.setPosition(2.f, 17.f);
+  maxIterationsText.setPosition(2.f, 32.f);
 
   averageSecondsPerFrame = 0;
 };
@@ -26,17 +29,20 @@ void StatsPanel::update() {
 
   double lastGeneretionDuration = statService->data.lastGeneretionDuration.count();
   lastGeneretionDurationText.setString(numberToString<double>(lastGeneretionDuration));
+
+  maxIterationsText.setString(numberToString<int>(statService->data.maxIterations));
 };
 
 void StatsPanel::draw(std::shared_ptr<sf::RenderWindow> target) {
   target->draw(fpsText);
   target->draw(lastGeneretionDurationText);
+  target->draw(maxIterationsText);
 }
 
 void StatsPanel::setDefaultTextStyle(sf::Text& text) {
   text.setFont(font);
   text.setString("0");
-  text.setCharacterSize(24);
+  text.setCharacterSize(14);
   text.setFillColor(sf::Color::White);
   text.setStyle(sf::Text::Regular);
 }

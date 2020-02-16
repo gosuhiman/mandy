@@ -11,9 +11,10 @@
 std::mutex mtx;
 
 Mandelbrot::Mandelbrot(unsigned int width, unsigned int height) : width(width), height(height) {
-  defaultViewport = ComplexPlane<double>(-2.2, -1.2, 1, 1.2);
+  defaultViewport = ComplexPlane<Number>(-2.2, -1.2, 1, 1.2);
   viewport = defaultViewport;
-  viewport.updateForProportions(double(height) / double(width));
+  viewport.updateForProportions(Number(height) / Number(width));
+  currentZoom = 1;
   threadCount = std::thread::hardware_concurrency();
   if (threadCount == 0) threadCount = DEFAULT_THREAD_COUNT;
   data = new sf::Uint8[width * height];
@@ -21,15 +22,22 @@ Mandelbrot::Mandelbrot(unsigned int width, unsigned int height) : width(width), 
 }
 
 void Mandelbrot::initialize() {
-  buildPalette();
 }
 
 void Mandelbrot::draw(std::function<void(sf::Uint8*)> callback) {
+  double spreadX = 1.2 / currentZoom;
+  maxIterations = 100;
+  maxIterationsCallback(maxIterations);
+  buildPalette();
   callback(generate());
 }
 
 void Mandelbrot::setLastGenerationDurationCallback(std::function<void(Duration)> callback) {
   lastGenerationDurationCallback = callback;
+}
+
+void Mandelbrot::setMaxIterationsCallback(std::function<void(unsigned int)> callback) {
+  maxIterationsCallback = callback;
 }
 
 void Mandelbrot::changeColoringMode(std::function<void(sf::Uint8*)> callback) {
@@ -40,7 +48,8 @@ void Mandelbrot::changeColoringMode(std::function<void(sf::Uint8*)> callback) {
 
 void Mandelbrot::zoomIn(unsigned int x, unsigned int y) {
   Complex zoomPoint = transformToComplexPlane(x, y);
-  viewport.zoomTo(zoomPoint.real(), zoomPoint.imag(), ZOOM_AMMOUNT);
+  viewport.zoomTo(zoomPoint.real(), zoomPoint.imag(), ZOOM_INCREASE);
+  currentZoom *= ZOOM_INCREASE;
 }
 
 void Mandelbrot::resize(unsigned int newWidth, unsigned int newHeight) {
@@ -52,8 +61,8 @@ void Mandelbrot::resize(unsigned int newWidth, unsigned int newHeight) {
 }
 
 Complex Mandelbrot::transformToComplexPlane(int x, int y) {
-  Complex c((double)x / (double)width * viewport.width() + viewport.minX,
-    (double)y / (double)height * viewport.height() + viewport.minY);
+  Complex c((Number)x / (Number)width * viewport.width() + viewport.minX,
+    (Number)y / (Number)height * viewport.height() + viewport.minY);
 
   return c;
 }
@@ -93,15 +102,15 @@ void Mandelbrot::generatePixelRow(int py, sf::Uint8* pixels) {
     Complex c = transformToComplexPlane(px, py);
     sf::Uint8 i = 0;
 
-    double cr = c.real();
-    double ci = c.imag();
-    double zr = 0;
-    double zi = 0;
-    double zrsqr = zr * zr;
-    double zisqr = zi * zi;
-    double zrPlusZi;
+    Number cr = c.real();
+    Number ci = c.imag();
+    Number zr = 0;
+    Number zi = 0;
+    Number zrsqr = zr * zr;
+    Number zisqr = zi * zi;
+    Number zrPlusZi;
 
-    while (zrsqr + zisqr < 4 && i < MAX_ITERATIONS) {
+    while (zrsqr + zisqr < 4 && i < maxIterations) {
       zrPlusZi = zr + zi;
       zi = zrPlusZi * zrPlusZi - zrsqr - zisqr;
       zi += ci;
@@ -138,12 +147,13 @@ void Mandelbrot::colorPixel(unsigned int px, unsigned int py, sf::Uint8* pixels)
 void Mandelbrot::buildPalette() {
   float r, g, b;
 
-  for (int i = 0; i < MAX_ITERATIONS; i++) {
-    for (int c = 0; c < 6; c++) {
-      r = i * (float)colors[c].r / MAX_ITERATIONS;
-      g = i * (float)colors[c].g / MAX_ITERATIONS;
-      b = i * (float)colors[c].b / MAX_ITERATIONS;
-      palettes[c][i] = sf::Color(sf::Uint8(r), sf::Uint8(g), sf::Uint8(b));
+  for (int c = 0; c < sizeof(colors); c++) {
+    palettes[c].clear();
+    for (int i = 0; i < maxIterations; i++) {
+      r = i * (float)colors[c].r / maxIterations;
+      g = i * (float)colors[c].g / maxIterations;
+      b = i * (float)colors[c].b / maxIterations;
+      palettes[c].push_back(sf::Color(sf::Uint8(r), sf::Uint8(g), sf::Uint8(b)));
     }
   }
 

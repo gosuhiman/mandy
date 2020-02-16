@@ -1,6 +1,13 @@
 #include <complex>
 
-using Complex = std::complex<double>;
+#ifdef HIGH_PRECISION
+#include <boost/multiprecision/mpfr.hpp>
+using Number = boost::multiprecision::number<boost::multiprecision::mpfr_float_backend<0>>;
+#else
+using Number = double;
+#endif
+
+using Complex = std::complex<Number>;
 
 template<typename T> class ComplexPlane {
 public:

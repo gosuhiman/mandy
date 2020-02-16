@@ -17,6 +17,9 @@ Canvas::Canvas(unsigned int width, unsigned int height, std::shared_ptr<StatServ
   fractal->setLastGenerationDurationCallback([statService](Duration duration) {
     statService->data.lastGeneretionDuration = duration;
   });
+  fractal->setMaxIterationsCallback([statService](unsigned int maxIterations) {
+    statService->data.maxIterations = maxIterations;
+  });
 }
 
 void Canvas::initialize() {
